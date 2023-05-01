@@ -31,3 +31,15 @@ def addArg(parser):
         "--kdim", default=50, type=int,
         help="k dimension, the dimension for word embeddings"
     )
+    parser.add_argument(
+        "--max-process", type=int, default=20,
+        help="Maximum number of processes"
+    )
+    parser.add_argument(
+        "--logging-interval", type=int, default=50,
+        help="logging interval for loading corpus"
+    )
+    parser.add_argument(
+        "--dropout", type=float, default=0.5,
+        help="dropout rate"
+    )

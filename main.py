@@ -23,6 +23,7 @@ def main():
             trainData = loadSentimentCorpus(args, os.path.join(args.corpus,"train.txt"), word2vec)
             validData = loadSentimentCorpus(args, os.path.join(args.corpus,"validation.txt"), word2vec)
             print(trainData[0])
+            out = model(trainData[0]["embeddings"], "train")
         case "infer":
             word2vec = loadWord2Vec(args.word2vec, True)
             testData = loadSentimentCorpus(args, os.path.join(args.corpus,"test.txt"), word2vec)

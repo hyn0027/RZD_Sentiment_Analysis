@@ -3,6 +3,8 @@ import ast
 from gensim.models import keyedvectors
 from utils.embedding import embedding_single
 import zhconv
+from utils.log import *
+from multiprocessing import Pool, Manager, cpu_count
 
 def readtextFile(filePath, encoding="utf8"):
     try:
@@ -58,16 +60,37 @@ def loadWord2Vec(filePath, binary=True):
 
 def loadSentimentCorpus(args, filePath, word2vec, encoding="utf8", ):
     datalines = readtextFile(filePath, encoding=encoding)
+    length = len(datalines)
+    logger = getLogger(args=args, name="loadSentimentCorpus")
+    logger.info("successfully load %d samples from %s", length, filePath)
+
+    processNum = min(args.max_process, cpu_count())
+    processSize = int(length / processNum) + 1
+    processArgs = []
+    for i in range(int(length / processSize) + 1):
+        l = i * processSize
+        r = min(length, l + processSize)
+        processArgs.append((args, datalines[l:r], word2vec, i))
+    data = []
+    with Pool(processes=processNum) as pool:
+        dataList = pool.starmap(getSentimentCorpusEmbedding, processArgs)
+        for item in dataList:
+            data += item
+    return data
+
+def getSentimentCorpusEmbedding(args, datalines, word2vec, processID):
     data = []
     cnt = 0
+    logger = getLogger(args=args, name="getSentimentCorpusEmbedding")
     for item in datalines:
-        print(cnt)
-        cnt += 1
         word = zhconv.convert(item, "zh-cn").split()
-        word2vec, embeddings = embedding_single(args, word2vec, word[1:])
+        embeddings = embedding_single(args, word2vec, word[1:])
         data.append({
             "label": int(word[0]),
             "words": word[1:],
-            "embeddings": embeddings,
+            "embeddings": embeddings
         })
+        cnt += 1
+        if cnt % args.logging_interval == 0:
+            logger.info("finished %d / %d sentences in process %d", cnt, len(datalines), processID)
     return data
