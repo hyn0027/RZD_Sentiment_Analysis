@@ -12,15 +12,10 @@ class CNN(nn.Module):
         self.fullyConnectedLayer = nn.Linear(300, 2, device=0)
 
     def forward(self, x, stage):
-        x = x.to(device=0)
-        print(x)
         x = torch.unsqueeze(x, 0)
         x1 = self.featureMaps3(x)
         x2 = self.featureMaps4(x)
         x3 = self.featureMaps5(x)
-        print(x1.size())
-        print(x2.size())
-        print(x3.size())
         x1, _indices1 = torch.max(x1, 1)
         x2, _indices2 = torch.max(x2, 1)
         x3, _indices3 = torch.max(x3, 1)
@@ -31,4 +26,4 @@ class CNN(nn.Module):
         else:
             x *= self.dropoutRate
         x = self.fullyConnectedLayer(x)
-        print(x.size())
+        return x[0]

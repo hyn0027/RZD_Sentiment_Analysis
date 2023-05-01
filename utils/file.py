@@ -5,6 +5,7 @@ from utils.embedding import embedding_single
 import zhconv
 from utils.log import *
 from multiprocessing import Pool, Manager, cpu_count
+import random
 
 def readtextFile(filePath, encoding="utf8"):
     try:
@@ -58,7 +59,7 @@ def writeTextFile(filePath, content, encoding="utf8"):
 def loadWord2Vec(filePath, binary=True):
     return keyedvectors.load_word2vec_format(filePath, binary=binary)
 
-def loadSentimentCorpus(args, filePath, word2vec, encoding="utf8", ):
+def loadSentimentCorpus(args, filePath, word2vec, encoding="utf8"):
     datalines = readtextFile(filePath, encoding=encoding)
     length = len(datalines)
     logger = getLogger(args=args, name="loadSentimentCorpus")
@@ -76,6 +77,7 @@ def loadSentimentCorpus(args, filePath, word2vec, encoding="utf8", ):
         dataList = pool.starmap(getSentimentCorpusEmbedding, processArgs)
         for item in dataList:
             data += item
+    logger.info("successfully processed %d samples from %s", length, filePath)
     return data
 
 def getSentimentCorpusEmbedding(args, datalines, word2vec, processID):
@@ -91,6 +93,6 @@ def getSentimentCorpusEmbedding(args, datalines, word2vec, processID):
             "embeddings": embeddings
         })
         cnt += 1
-        if cnt % args.logging_interval == 0:
+        if cnt % args.loading_logging_interval == 0:
             logger.info("finished %d / %d sentences in process %d", cnt, len(datalines), processID)
     return data

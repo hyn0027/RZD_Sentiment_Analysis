@@ -36,10 +36,26 @@ def addArg(parser):
         help="Maximum number of processes"
     )
     parser.add_argument(
-        "--logging-interval", type=int, default=50,
+        "--loading_logging-interval", type=int, default=200,
         help="logging interval for loading corpus"
     )
     parser.add_argument(
         "--dropout", type=float, default=0.5,
         help="dropout rate"
+    )
+    parser.add_argument(
+        "--batch-size", type=int, default=50,
+        help="batch size"
+    )
+    parser.add_argument(
+        "--max-epoch", type=int, default=100,
+        help="batch size"
+    )
+    parser.add_argument(
+        "--logging-interval", type=int, default=40,
+        help="logging interval for training"
+    )
+    parser.add_argument(
+        "--save-dir", default="./checkpoints/",
+        help="checkpoint directory"
     )
