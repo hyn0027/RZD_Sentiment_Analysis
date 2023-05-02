@@ -1,5 +1,4 @@
 import logging
-import tqdm
 
 def getLogger(args, name, output=True):
     logger = logging.getLogger(name)
@@ -14,16 +13,7 @@ def getLogger(args, name, output=True):
         ch = logging.StreamHandler()
         ch.setFormatter(formatter)
         logger.addHandler(ch)
+        fh = logging.FileHandler(args.log_file)
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
     return logger
-
-class TqdmLoggingHandler(logging.Handler):
-    def __init__(self, level=logging.NOTSET):
-        super().__init__(level)
-
-    def emit(self, record):
-        try:
-            msg = self.format(record)
-            tqdm.tqdm.write(msg)
-            self.flush()
-        except Exception:
-            self.handleError(record)  

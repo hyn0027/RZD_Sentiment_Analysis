@@ -1,11 +1,10 @@
 import json
 import ast
-from gensim.models import keyedvectors
+from gensim.models.keyedvectors import load_word2vec_format
 from utils.embedding import embedding_single
 import zhconv
 from utils.log import *
-from multiprocessing import Pool, Manager, cpu_count
-import random
+from multiprocessing import Pool, cpu_count
 
 def readtextFile(filePath, encoding="utf8"):
     try:
@@ -57,7 +56,7 @@ def writeTextFile(filePath, content, encoding="utf8"):
             f.write(item + '\n')
 
 def loadWord2Vec(filePath, binary=True):
-    return keyedvectors.load_word2vec_format(filePath, binary=binary)
+    return load_word2vec_format(filePath, binary=binary)
 
 def loadSentimentCorpus(args, filePath, word2vec, encoding="utf8"):
     datalines = readtextFile(filePath, encoding=encoding)

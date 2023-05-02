@@ -24,8 +24,8 @@ def addArg(parser):
         help="path to corpus data"
     )
     parser.add_argument(
-        "--task", choices=["clean", "train", "infer", "evaluate"], required=True, \
-        help="Selected from: [clean, train, infer, evaluate]"
+        "--task", choices=["clean", "train", "eval"], required=True, \
+        help="Selected from: [clean, train, eval]"
     )
     parser.add_argument(
         "--kdim", default=50, type=int,
@@ -48,14 +48,34 @@ def addArg(parser):
         help="batch size"
     )
     parser.add_argument(
-        "--max-epoch", type=int, default=100,
+        "--max-epoch", type=int, default=40,
         help="batch size"
     )
     parser.add_argument(
-        "--logging-interval", type=int, default=40,
+        "--logging-interval", type=int, default=100,
         help="logging interval for training"
     )
     parser.add_argument(
         "--save-dir", default="./checkpoints/",
         help="checkpoint directory"
+    )
+    parser.add_argument(
+        "--log-file", default="./logging/log.txt",
+        help="logging file"
+    )
+    parser.add_argument(
+        "--shuffle", default=True, type=bool,
+        help="whether to shuffle or not"
+    )
+    parser.add_argument(
+        "--optimizer", default="adam", choices=["adam", "SGD"],
+        help="which optimizer to use"
+    )
+    parser.add_argument(
+        "--lr", default=1e-3, type=float,
+        help="learning rate"
+    )
+    parser.add_argument(
+        "--early-stop", default=5, type=int,
+        help="early stopping epoch"
     )
