@@ -35,7 +35,7 @@ def main():
             bestLoss = 100.0
             earlyStoppingCnt = 0
             for i in range(args.max_epoch):
-                if args.shuffle:
+                if not args.no_shuffle:
                     random.shuffle(trainData)
                 loss = trainAnEpoch(args, model, trainData, validData, criterion, optimizer, i, bestLoss)
                 if loss < bestLoss:

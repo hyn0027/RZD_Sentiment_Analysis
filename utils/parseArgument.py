@@ -32,7 +32,7 @@ def addArg(parser):
         help="k dimension, the dimension for word embeddings"
     )
     parser.add_argument(
-        "--max-process", type=int, default=20,
+        "--max-process", type=int, default=16,
         help="Maximum number of processes"
     )
     parser.add_argument(
@@ -64,7 +64,7 @@ def addArg(parser):
         help="logging file"
     )
     parser.add_argument(
-        "--shuffle", default=True, type=bool,
+        "--no-shuffle", action='store_true',
         help="whether to shuffle or not"
     )
     parser.add_argument(
