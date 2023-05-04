@@ -94,4 +94,6 @@ def getSentimentCorpusEmbedding(args, datalines, word2vec, processID):
         cnt += 1
         if cnt % args.loading_logging_interval == 0:
             logger.info("finished %d / %d sentences in process %d", cnt, len(datalines), processID)
+    if cnt != 0:
+        logger.info("finished %d / %d sentences in process %d", cnt, len(datalines), processID)
     return data

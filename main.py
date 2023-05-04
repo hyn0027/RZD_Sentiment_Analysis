@@ -3,10 +3,18 @@ from utils.log import *
 from utils.file import *
 import os
 from cnn import CNN
+from rnn import RNN
 import torch
 from torch.optim import Adam, SGD
 from torch.nn import CrossEntropyLoss
 import random
+
+def count_parameters(model):
+    return sum(
+        p.numel()
+        for p in model.parameters()
+        if p.requires_grad
+    )
 
 def main():
     args = parseArg()
@@ -17,10 +25,15 @@ def main():
             logger.info("using model cnn")
             model = CNN(args)
             logger.info(model)
+            logger.info("trainable parameters: %d", count_parameters(model))
         case "rnn":
             logger.info("using model rnn")
+            model = RNN(args)
+            logger.info(model)
+            logger.info("trainable parameters: %d", count_parameters(model))
         case "mlp":
             logger.info("using model mlp")
+    # exit(-1)
     match args.task:
         case "train":
             word2vec = loadWord2Vec(args.word2vec, True)
@@ -33,22 +46,26 @@ def main():
                 case "SGD":
                     optimizer = SGD(model.parameters(), args.lr)
             bestLoss = 100.0
+            previousLoss = 100.0
             earlyStoppingCnt = 0
             for i in range(args.max_epoch):
                 if not args.no_shuffle:
                     random.shuffle(trainData)
                 loss = trainAnEpoch(args, model, trainData, validData, criterion, optimizer, i, bestLoss)
-                if loss < bestLoss:
-                    bestLoss = loss
+                bestLoss = min(bestLoss, loss)
+                if loss < previousLoss:
                     earlyStoppingCnt = 0
                 else:
                     earlyStoppingCnt += 1
+                previousLoss = loss
                 if earlyStoppingCnt == args.early_stop:
+                    logger.info("early stopped!")
                     break
         case "eval":
             word2vec = loadWord2Vec(args.word2vec, True)
             testData = loadSentimentCorpus(args, os.path.join(args.corpus,"test.txt"), word2vec)
             checkpoint = torch.load(os.path.join(args.save_dir, "bestCheckpoint.pt"))
+            logger.info("epoch %d", checkpoint["epoch"])
             logger.info("successfully read checkpoint from %s", str(os.path.join(args.save_dir, "bestCheckpoint.pt")))
             model.load_state_dict(checkpoint['model_state_dict'])
             logger.info("successfully load checkpoint from %s", str(os.path.join(args.save_dir, "bestCheckpoint.pt")))

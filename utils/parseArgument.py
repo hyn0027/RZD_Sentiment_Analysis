@@ -36,11 +36,11 @@ def addArg(parser):
         help="Maximum number of processes"
     )
     parser.add_argument(
-        "--loading_logging-interval", type=int, default=200,
+        "--loading_logging-interval", type=int, default=400,
         help="logging interval for loading corpus"
     )
     parser.add_argument(
-        "--dropout", type=float, default=0.5,
+        "--dropout", type=float, default=0.3,
         help="dropout rate"
     )
     parser.add_argument(
@@ -48,7 +48,7 @@ def addArg(parser):
         help="batch size"
     )
     parser.add_argument(
-        "--max-epoch", type=int, default=40,
+        "--max-epoch", type=int, default=30,
         help="batch size"
     )
     parser.add_argument(
@@ -76,6 +76,14 @@ def addArg(parser):
         help="learning rate"
     )
     parser.add_argument(
-        "--early-stop", default=5, type=int,
+        "--early-stop", default=4, type=int,
         help="early stopping epoch"
+    )
+    parser.add_argument(
+        "--rnn-hdim", default=60, type=int,
+        help="hidden layer dimension for LSTM"
+    )
+    parser.add_argument(
+        "--cnn-kernel-num", default=100, type=int,
+        help="kernel num for cnn"
     )
