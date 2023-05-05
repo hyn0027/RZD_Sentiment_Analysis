@@ -7,3 +7,5 @@
 CNN 参考[Kim, Y. (2014). Convolutional Neural Networks for Sentence Classification. Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP 2014), 1746–1751.](http://arxiv.org/abs/1408.5882)
 
 RNN 使用LSTM+全连接
+
+MLP 使用朴素全连接神经网络

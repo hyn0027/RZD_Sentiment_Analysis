@@ -87,3 +87,15 @@ def addArg(parser):
         "--cnn-kernel-num", default=100, type=int,
         help="kernel num for cnn"
     )
+    parser.add_argument(
+        "--mlp-hidden1", default=57, type=int,
+        help="kernel num for cnn"
+    )
+    parser.add_argument(
+        "--mlp-hidden2", default=65, type=int,
+        help="kernel num for cnn"
+    )
+    parser.add_argument(
+        "--mlp-window", default=20, type=int,
+        help="kernel num for cnn"
+    )

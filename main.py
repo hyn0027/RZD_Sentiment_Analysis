@@ -2,8 +2,9 @@ from utils.parseArgument import parseArg
 from utils.log import *
 from utils.file import *
 import os
-from cnn import CNN
-from rnn import RNN
+from model.cnn import CNN
+from model.rnn import RNN
+from model.mlp import MLP
 import torch
 from torch.optim import Adam, SGD
 from torch.nn import CrossEntropyLoss
@@ -24,15 +25,14 @@ def main():
         case "cnn":
             logger.info("using model cnn")
             model = CNN(args)
-            logger.info(model)
-            logger.info("trainable parameters: %d", count_parameters(model))
         case "rnn":
             logger.info("using model rnn")
             model = RNN(args)
-            logger.info(model)
-            logger.info("trainable parameters: %d", count_parameters(model))
         case "mlp":
             logger.info("using model mlp")
+            model = MLP(args)
+    logger.info(model)
+    logger.info("trainable parameters: %d", count_parameters(model))
     # exit(-1)
     match args.task:
         case "train":

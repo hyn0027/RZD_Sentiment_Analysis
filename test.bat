@@ -73,3 +73,6 @@ python main.py --model rnn --task eval --rnn-hdim 50 --save-dir ./checkpoints/rn
 
 python main.py --model rnn --task train --rnn-hdim 70 --save-dir ./checkpoints/rnn12 --log-file ./logging/rnn12_train.txt
 python main.py --model rnn --task eval --rnn-hdim 70 --save-dir ./checkpoints/rnn12 --log-file ./logging/rnn12_eval.txt
+
+python main.py --model mlp --task train --save-dir ./checkpoints/mlp --log-file ./logging/mlp_train.txt
+python main.py --model mlp --task eval --save-dir ./checkpoints/mlp --log-file ./logging/mlp_eval.txt
