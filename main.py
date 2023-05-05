@@ -48,6 +48,7 @@ def main():
             bestLoss = 100.0
             previousLoss = 100.0
             earlyStoppingCnt = 0
+            lastEpoch = 0
             for i in range(args.max_epoch):
                 if not args.no_shuffle:
                     random.shuffle(trainData)
@@ -58,9 +59,18 @@ def main():
                 else:
                     earlyStoppingCnt += 1
                 previousLoss = loss
+                lastEpoch = i
                 if earlyStoppingCnt == args.early_stop:
                     logger.info("early stopped!")
                     break
+            torch.save(
+                {
+                    'epoch': lastEpoch,
+                    'model_state_dict': model.state_dict(),
+                    'optimizer_state_dict': optimizer.state_dict(),
+                },
+                os.path.join(args.save_dir, "lastCheckpoint.pt")
+            )
         case "eval":
             word2vec = loadWord2Vec(args.word2vec, True)
             testData = loadSentimentCorpus(args, os.path.join(args.corpus,"test.txt"), word2vec)
@@ -131,15 +141,15 @@ def trainAnEpoch(args, model, trainData, validData, criterion, optimizer, epochI
     output = torch.stack(output)
     loss = criterion(output, target)
     logger.info("validation result: loss = %f, accuracy = %f = %d / %d", loss, accurateNum / len(validData), accurateNum, len(validData))
-    torch.save(
-        {
-            'epoch': epochID,
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'loss': loss,
-        },
-        os.path.join(args.save_dir, "epoch" + str(epochID) + ".pt")
-    )
+    # torch.save(
+    #     {
+    #         'epoch': epochID,
+    #         'model_state_dict': model.state_dict(),
+    #         'optimizer_state_dict': optimizer.state_dict(),
+    #         'loss': loss,
+    #     },
+    #     os.path.join(args.save_dir, "epoch" + str(epochID) + ".pt")
+    # )
     if loss < bestLoss:
         torch.save(
             {
